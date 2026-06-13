@@ -53,3 +53,48 @@ istLebendig astronaut =
 istTot :: Astronaut -> Bool
 istTot astronaut =
   zustand astronaut == Tot
+
+
+data ML a = E | L a (ML a) deriving Show
+
+
+-- (a)
+liste1234 :: ML Integer
+liste1234 = L 1 (L 2 (L 3 (L 4 E)))
+
+
+-- (b)
+myHead :: ML a -> a
+myHead E = error "empty list"
+myHead (L x _) = x
+
+
+-- (c)
+myAppend :: ML a -> ML a -> ML a
+myAppend E ys = ys
+myAppend (L x xs) ys = L x (myAppend xs ys)
+
+
+-- (d)
+myAdd :: Num a => ML a -> ML a -> ML a
+myAdd E _ = E
+myAdd _ E = E
+myAdd (L x xs) (L y ys) = L (x + y) (myAdd xs ys)
+
+
+-- (e)
+myString :: Show a => ML a -> String
+myString E = ""
+myString (L x E) = show x
+myString (L x xs) = show x ++ ", " ++ myString xs
+
+
+-- (f)
+myLess :: Ord a => ML a -> ML a -> Bool
+myLess E E = False
+myLess E (L _ _) = True
+myLess (L _ _) E = False
+myLess (L x xs) (L y ys)
+  | x < y     = True
+  | x > y     = False
+  | otherwise = myLess xs ys
