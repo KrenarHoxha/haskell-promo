@@ -98,3 +98,22 @@ myLess (L x xs) (L y ys)
   | x < y     = True
   | x > y     = False
   | otherwise = myLess xs ys
+
+-- (a)
+length' :: [a] -> Int
+length' = foldr (\_ acc -> acc + 1) 0
+
+
+-- (b)
+any' :: (a -> Bool) -> [a] -> Bool
+any' p = foldr (\x acc -> p x || acc) False
+
+
+-- (c)
+maximum' :: Ord a => [a] -> a
+maximum' = foldl1 max
+
+
+-- (d)
+unzip' :: [(a, b)] -> ([a], [b])
+unzip' = foldr (\(x, y) (xs, ys) -> (x : xs, y : ys)) ([], [])
