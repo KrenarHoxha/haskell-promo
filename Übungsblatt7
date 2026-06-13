@@ -1,0 +1,120 @@
+--------------------------------------------------
+-- Aufgabe 1: Funktionen höherer Ordnung
+--------------------------------------------------
+
+-- (a)
+elem' :: Eq a => a -> [a] -> Bool
+elem' x = foldr (\y acc -> y == x || acc) False
+
+
+-- (b)
+all' :: (a -> Bool) -> [a] -> Bool
+all' p = foldr (\x acc -> p x && acc) True
+
+
+-- (c)
+reverse' :: [a] -> [a]
+reverse' = foldl (flip (:)) []
+
+
+-- (d)
+takeWhile' :: (a -> Bool) -> [a] -> [a]
+takeWhile' p = foldr (\x acc -> if p x then x : acc else []) []
+
+
+--------------------------------------------------
+-- Aufgabe 2: Pointfree
+--------------------------------------------------
+
+-- (a)
+fooA :: Num a => a -> a
+fooA = (* 4)
+
+
+-- (b)
+-- Angenommen, bar ist irgendwo definiert.
+fooB :: (a -> a) -> a -> a
+fooB bar = bar . bar
+
+-- Falls bar schon als Funktion existiert, wäre die eigentliche Lösung:
+-- foo = bar . bar
+
+
+-- (c)
+fooC :: a -> b -> (b, a)
+fooC = flip (,)
+
+
+-- (d)
+fooD :: Integral a => a -> Bool
+fooD = (== 1) . (`mod` 2)
+
+
+-- (e)
+fooE :: Int -> Double
+fooE = sqrt . (5 *) . sum . (`take` [1..50])
+
+
+-- (f)
+fooF :: String -> String
+fooF = ("River" ++) . (: "Plate") . head
+
+
+--------------------------------------------------
+-- Aufgabe 3: Lösen von Problemen
+--------------------------------------------------
+
+-- (a)
+sumOddSquares :: Integer
+sumOddSquares = sum $ takeWhile (< 10000) $ filter odd $ map (^ 2) [1..]
+
+
+-- (b)
+chain :: Integral a => a -> [a]
+chain 1 = [1]
+chain n
+  | even n = n : chain (n `div` 2)
+  | odd n  = n : chain (n * 3 + 1)
+
+longChainsOver15 :: Int
+longChainsOver15 = length $ filter ((> 15) . length) $ map chain [1..100]
+
+
+--------------------------------------------------
+-- Aufgabe 4: Runden
+--------------------------------------------------
+
+-- (a)
+roundA1 :: Integer
+roundA1 = round 6.7
+
+roundA2 :: Integer
+roundA2 = round 2.1
+
+roundA3 :: Bool
+roundA3 = (round pi :: Integer) == (round (exp 1) :: Integer)
+
+
+-- (b)
+roundToNearestTenth :: Double -> Double
+roundToNearestTenth x =
+  fromIntegral (round (x * 10)) / 10
+
+roundToNearestNth :: Int -> Double -> Double
+roundToNearestNth n x =
+  fromIntegral (round (x * factor)) / factor
+  where
+    factor = 10 ^ n
+
+
+-- (c) Pointfree-Versionen
+
+roundToNearestTenthPF :: Double -> Double
+roundToNearestTenthPF =
+  (/ 10) . fromIntegral . round . (* 10)
+
+roundToNearestNthPF :: Int -> Double -> Double
+roundToNearestNthPF n =
+  (/ factor) . fromIntegral . round . (* factor)
+  where
+    factor = 10 ^ n
