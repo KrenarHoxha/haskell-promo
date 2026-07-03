@@ -48,10 +48,6 @@ op 1 0 = 0
 op 1 1 = 1
 op _ _ = error "op ist nur für 0 und 1 definiert"
 
--- Achtung: In echter Haskell-Praxis ist das keine gute Idee,
--- weil Int schon ein allgemeiner Typ ist.
--- Für die Übung geht es aber um Int mit dem Zahlenraum {0,1}.
-
 instance Semigroup Int where
   (<>) = op
 
